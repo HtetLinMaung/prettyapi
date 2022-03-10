@@ -1,16 +1,48 @@
+@import url("https://fonts.googleapis.com/css2?family=Space+Mono&display=swap");
+
+@font-face {
+  font-family: "Sofia Pro";
+  src: url("/pretty-api/fonts/Sofia Pro Regular Az.otf");
+}
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 html,
 body {
+  background-color: #fafafa;
   padding: 0;
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
-    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+  font-family: "Sofia Pro", "Varela Round", sans-serif;
 }
 
 a {
   color: inherit;
   text-decoration: none;
+  transition: all 0.4s;
+}
+a:hover {
+  text-decoration: underline;
 }
 
 * {
   box-sizing: border-box;
+}
+
+.font-code {
+  font-family: "Space Mono", monospace;
+}
+
+.json-key {
+  color: #d772c2;
+}
+.json-value-string {
+  color: #50ab76;
+}
+.json-value-number {
+  color: #976dd1;
+}
+.json-value-boolean {
+  color: #b37d6d;
 }
