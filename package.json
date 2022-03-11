@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@jst_htet/file-picker": "^1.0.8",
     "axios": "^0.26.0",
     "moment": "^2.29.1",
     "next": "12.1.0",

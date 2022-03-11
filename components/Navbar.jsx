@@ -1,23 +1,32 @@
 import Link from "next/link";
-import Image from "next/image";
 import { useRouter } from "next/router";
 import { useState, useEffect, useContext } from "react";
 import { appContext } from "../context/AppProvider";
+import Menu from "./Menu";
 
-const ProfileImage = ({ profile, username }) => {
-  if (profile) {
-    return (
-      <Image
-        src={profile}
-        alt={username}
-        className="rounded-full w-10 h-10 mr-2 cursor-pointer"
-      />
-    );
-  }
+const ProfileImage = ({ profile, username, router }) => {
+  const items = [
+    {
+      label: "Sign out",
+      link: "/pretty-api/login",
+    },
+  ];
+
   return (
-    <div className="bg-black text-white rounded-full w-10 h-10 flex justify-center items-center mr-2 cursor-pointer">
-      {username.slice(0, 1).toUpperCase()}
-    </div>
+    <Menu
+      items={items}
+      onSelected={(item) => {
+        localStorage.clear();
+        router.push(item.link);
+      }}
+    >
+      <div
+        style={{ backgroundImage: `url(${process.env.server + profile})` }}
+        className="bg-black bg-cover text-white rounded-full w-10 h-10 flex justify-center items-center mr-2"
+      >
+        {profile ? "" : username.slice(0, 1).toUpperCase()}
+      </div>
+    </Menu>
   );
 };
 
@@ -42,7 +51,9 @@ export default function Navbar() {
     <nav
       style={{
         display:
-          router.route.includes("/signup") || router.route.includes("/login")
+          router.route.includes("/signup") ||
+          router.route.includes("/login") ||
+          router.query.fullscreen == "y"
             ? "none"
             : "block",
       }}
@@ -64,7 +75,11 @@ export default function Navbar() {
         </h1>
       </div>
       <div className="container mx-auto px-4">
-        <div className="flex justify-between items-center py-2">
+        <div
+          className={`flex justify-between items-center ${
+            state.token ? "py-2" : "py-4"
+          }`}
+        >
           <div className="flex items-center">
             {openMenu ? (
               <svg
@@ -163,7 +178,11 @@ export default function Navbar() {
               ""
             )}
             {token && username ? (
-              <ProfileImage username={username} profile={profile} />
+              <ProfileImage
+                username={username}
+                profile={profile}
+                router={router}
+              />
             ) : (
               ""
             )}

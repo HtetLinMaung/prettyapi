@@ -3,6 +3,8 @@ import axios from "axios";
 import rest from "../../../../utils/rest";
 import { useRouter } from "next/router";
 import { getBeautifulJson } from "../../../../utils/pretty-json";
+import Modal from "../../../../components/Modal";
+import { showToast } from "../../../../utils/toast";
 
 const Method = ({ method }) => {
   let className =
@@ -40,7 +42,7 @@ const Tab = ({ tabs, item, i, i2, host, beautifyClickHandler }) => {
           );
         }}
         id={`gp${i}_${i2}_tab_body`}
-        className="bg-gray-100 mb-5 rounded-2xl p-4 w-2/3 text-sm overflow-x-auto outline-none"
+        className="bg-gray-100 mb-5 rounded-2xl p-4 text-sm overflow-x-auto outline-none w-full sm:w-5/6 md:w-2/3"
         style={{
           minHeight: 128,
           display: tabs.includes(`gp${i}_${i2}_body`) ? "block" : "none",
@@ -65,7 +67,7 @@ const Tab = ({ tabs, item, i, i2, host, beautifyClickHandler }) => {
           );
         }}
         id={`gp${i}_${i2}_tab_headers`}
-        className="bg-gray-100 mb-5 rounded-2xl p-4 w-2/3 text-sm overflow-x-auto outline-none"
+        className="bg-gray-100 mb-5 rounded-2xl p-4 text-sm overflow-x-auto outline-none w-full sm:w-5/6 md:w-2/3"
         style={{
           minHeight: 128,
           display: tabs.includes(`gp${i}_${i2}_headers`) ? "block" : "none",
@@ -101,7 +103,7 @@ const Tab = ({ tabs, item, i, i2, host, beautifyClickHandler }) => {
           );
         }}
         id={`gp${i}_${i2}_tab_params`}
-        className="bg-gray-100 mb-5 rounded-2xl p-4 w-2/3 text-sm overflow-x-auto outline-none"
+        className="bg-gray-100 mb-5 rounded-2xl p-4 text-sm overflow-x-auto outline-none w-full sm:w-5/6 md:w-2/3"
         style={{
           minHeight: 128,
           display: tabs.includes(`gp${i}_${i2}_params`) ? "block" : "none",
@@ -114,7 +116,7 @@ const Tab = ({ tabs, item, i, i2, host, beautifyClickHandler }) => {
   );
 };
 
-const fetchApi = async (ref, access_key = "") => {
+const fetchApi = async (ref, access_key = "", router = null) => {
   const [res, err] = await rest.get(
     `/api/${ref}`,
     { access_key },
@@ -123,6 +125,15 @@ const fetchApi = async (ref, access_key = "") => {
     }
   );
   if (err) {
+    if (
+      ["No auth header", "Invalid Token", "Not authenticated!"].includes(
+        err.response.data.message
+      )
+    ) {
+      showToast("Please login first", "error", 10000);
+      localStorage.clear();
+      router.push("/pretty-api/login");
+    }
     return null;
   } else {
     return res.data.data;
@@ -168,7 +179,7 @@ export default function Api({ id, access_key }) {
         JSON.parse(params_tag.innerText.trim())
       )}</pre>`;
     } catch (err) {
-      console.log(err.message);
+      showToast(err.message, "error", 10000);
     }
   };
 
@@ -200,7 +211,6 @@ export default function Api({ id, access_key }) {
         res.data
       )}</pre>`;
     } catch (err) {
-      console.log(err);
       element.innerHTML = `<pre class="font-code">${getBeautifulJson(
         err.response
       )}</pre>`;
@@ -214,7 +224,7 @@ export default function Api({ id, access_key }) {
       element.innerHTML = `<pre class="font-code">${text}</pre>`;
       setGlobalHeaders(text);
     } catch (err) {
-      console.log(err.message);
+      showToast(err.message, "error", 10000);
     }
   };
 
@@ -264,11 +274,13 @@ export default function Api({ id, access_key }) {
   };
 
   useEffect(() => {
-    fetchApi(id, access_key).then((res) => {
+    fetchApi(id, access_key, router).then((res) => {
       if (res) {
         setName(res.name);
         setDescription(res.description);
         setJson(JSON.parse(res.json));
+      } else {
+        setJson(null);
       }
     });
   }, [access_key]);
@@ -313,14 +325,11 @@ export default function Api({ id, access_key }) {
             >
               Global Headers
             </button>
-            <div
+            <Modal
               onClick={() => {
                 setOpenGlobal(false);
               }}
-              className="fixed top-0 left-0 w-screen h-screen z-50 flex justify-center items-center ease-in-out duration-300 overflow-auto"
-              style={{
-                transform: openGlobal ? "scale(1)" : "scale(0)",
-              }}
+              open={openGlobal}
             >
               <div
                 onClick={(e) => e.stopPropagation()}
@@ -349,7 +358,7 @@ export default function Api({ id, access_key }) {
               >
                 <pre className="font-code"></pre>
               </div>
-            </div>
+            </Modal>
           </div>
         </div>
       ) : (
@@ -384,8 +393,8 @@ export default function Api({ id, access_key }) {
                     className="flex items-center cursor-pointer p-3 hover:bg-slate-100 ease-in-out duration-300"
                   >
                     <Method method={item.method} />
-                    <span className="mx-3 text-sm">{item.url}</span>
-                    <span className="text-sm text-gray-500">
+                    <span className="ml-3 sm:mx-3 text-sm">{item.url}</span>
+                    <span className="hidden sm:inline text-sm text-gray-500">
                       {item.description}
                     </span>
                   </div>
@@ -394,7 +403,7 @@ export default function Api({ id, access_key }) {
                       <input
                         id={`gp${i}_${i2}_input`}
                         type="text"
-                        className=" bg-gray-100 px-4 py-2 rounded-lg text-sm w-1/2 ease-in-out duration-300 outline-none text-gray-600 focus:text-black"
+                        className=" bg-gray-100 px-4 py-2 rounded-lg text-sm w-3/4 sm:w-2/3 md:w-1/2 ease-in-out duration-300 outline-none text-gray-600 focus:text-black"
                       />
                       <button
                         onClick={() => sendClickHandler(item.method, i, i2)}
@@ -475,7 +484,7 @@ export default function Api({ id, access_key }) {
             </div>
           ))
         ) : (
-          <div className="fixed top-0 left-0 w-screen h-screen z-50 flex justify-center items-center">
+          <Modal open={true}>
             <div
               className="bg-white shadow-lg rounded-xl p-4"
               style={{ minWidth: "25vw" }}
@@ -498,7 +507,7 @@ export default function Api({ id, access_key }) {
                 </button>
               </div>
             </div>
-          </div>
+          </Modal>
         )}
       </div>
     </div>
@@ -509,70 +518,6 @@ export async function getServerSideProps(context) {
   const { id } = context.query;
 
   const access_key = context.query.access_key || "";
-  // const data = await fetchApi(id, access_key);
-
-  // let json = null;
-  // let name = "";
-  // let description = "";
-  // if (data) {
-  //   json = JSON.parse(data.json);
-  //   name = data.name;
-  //   description = data.description;
-  // }
-
-  // const json = {
-  //   ref: "animelux",
-  //   host: "http://150.95.82.125:4001/fetchit",
-  //   groups: [
-  //     {
-  //       name: "gganime",
-  //       description: "Scrape data from gogoanime",
-  //       items: [
-  //         {
-  //           url: "/gganime/recent-releases",
-  //           method: "GET",
-  //           query: {
-  //             page: "1",
-  //           },
-  //           headers: {},
-  //           body: {},
-  //           description: "Get latest animes",
-  //         },
-  //         {
-  //           url: "/gganime/genre/[genre]",
-  //           method: "GET",
-  //           query: {
-  //             page: "1",
-  //           },
-  //           headers: {},
-  //           body: {},
-  //           description: "Get animes by genre",
-  //         },
-  //         {
-  //           url: "/gganime/info",
-  //           method: "GET",
-  //           query: {
-  //             c: "",
-  //           },
-  //           headers: {},
-  //           body: {},
-  //           description: "Get anime info",
-  //         },
-  //         {
-  //           url: "/gganime/related-episodes",
-  //           method: "POST",
-  //           query: {},
-  //           headers: {},
-  //           body: {
-  //             c: "",
-  //             eps: [],
-  //           },
-  //           description: "Get anime info",
-  //         },
-  //       ],
-  //     },
-  //   ],
-  // };
 
   return {
     props: {

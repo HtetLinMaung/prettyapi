@@ -3,6 +3,7 @@ import { createContext, useReducer } from "react";
 export const appContext = createContext(null);
 
 const initialState = {
+  api_name: "",
   token: "",
   username: "",
   profile: "",

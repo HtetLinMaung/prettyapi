@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import { useState, useContext } from "react";
 import { appContext } from "../../../context/AppProvider";
 import rest from "../../../utils/rest";
+import { showToast } from "../../../utils/toast";
 
 export default function Login() {
   const [_, dispatch] = useContext(appContext);
@@ -29,6 +30,8 @@ export default function Login() {
         },
       });
       router.push("/pretty-api/api/page/1");
+    } else {
+      showToast(err.response.data.message, "error", 10000);
     }
   };
 

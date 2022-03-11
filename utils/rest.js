@@ -29,6 +29,14 @@ const rest = {
       return [null, err];
     }
   },
+  delete: async (url, headers = {}) => {
+    try {
+      const res = await axios.delete(`${prefix}${url}`, { headers });
+      return [res, null];
+    } catch (err) {
+      return [null, err];
+    }
+  },
 };
 
 module.exports = rest;
