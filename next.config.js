@@ -14,7 +14,7 @@ const nextConfig = {
     ];
   },
   env: {
-    server: "http://localhost:4020",
+    server: "http://150.95.82.125:4020",
   },
 };
 
