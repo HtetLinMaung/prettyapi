@@ -96,6 +96,10 @@ export default function Api({ p }) {
             <div className="flex flex-wrap">
               {item.tags.map((tag, i) => (
                 <div
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    router.push(`/pretty-api/tag/${tag.replace("#", "")}`);
+                  }}
                   style={{ backgroundColor: "#E5EAFD", color: "#0084C7" }}
                   className="mr-2 p-1 rounded-md cursor-pointer text-sm"
                   key={i}

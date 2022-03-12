@@ -19,7 +19,7 @@ export default function Menu({ children, items, onSelected = () => {} }) {
           <div
             onClick={() => onSelected(item, i)}
             key={i}
-            className="text-center text-sm py-2 ease-in-out duration-300 hover:bg-gray-100 rounded-lg"
+            className="px-2 text-sm py-2 ease-in-out duration-300 hover:bg-gray-100 rounded-lg"
           >
             {item.label}
           </div>

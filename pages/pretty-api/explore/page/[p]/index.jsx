@@ -41,7 +41,6 @@ export default function Explore({ p }) {
     const token = localStorage.getItem("token");
     fetchApi(p, token, search, router).then((data) => {
       setItems(data);
-      console.log(data);
     });
   }, [search]);
 
@@ -83,6 +82,10 @@ export default function Explore({ p }) {
             <div className="flex flex-wrap">
               {item.tags.map((tag, i) => (
                 <div
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    router.push(`/pretty-api/tag/${tag.replace("#", "")}`);
+                  }}
                   style={{ backgroundColor: "#E5EAFD", color: "#0084C7" }}
                   className="mr-2 p-1 rounded-md cursor-pointer text-sm"
                   key={i}

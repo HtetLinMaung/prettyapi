@@ -7,6 +7,10 @@ import Menu from "./Menu";
 const ProfileImage = ({ profile, username, router }) => {
   const items = [
     {
+      label: "Profile",
+      link: "/pretty-api/profile",
+    },
+    {
       label: "Sign out",
       link: "/pretty-api/login",
     },
@@ -15,8 +19,10 @@ const ProfileImage = ({ profile, username, router }) => {
   return (
     <Menu
       items={items}
-      onSelected={(item) => {
-        localStorage.clear();
+      onSelected={(item, i) => {
+        if (i == 1) {
+          localStorage.clear();
+        }
         router.push(item.link);
       }}
     >

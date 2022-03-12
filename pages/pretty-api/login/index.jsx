@@ -56,6 +56,7 @@ export default function Login() {
             <div className="mb-3">
               <div className="text-sm mb-1">Password</div>
               <input
+                onKeyDown={(e) => e.key === "Enter" && handleLogin()}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 type="password"
