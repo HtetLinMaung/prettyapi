@@ -56,15 +56,14 @@ export default function Navbar() {
   return (
     <nav
       style={{
-        display:
-          router.route.includes("/signup") ||
-          router.route.includes("/login") ||
-          router.query.fullscreen == "y"
-            ? "none"
-            : "block",
+        display: router.query.fullscreen == "y" ? "none" : "block",
       }}
       className={`${
-        router.route.includes("/api/editor") ? "fixed" : "sticky"
+        router.route.includes("/api/editor") ||
+        router.route.includes("/login") ||
+        router.route.includes("/signup")
+          ? "fixed"
+          : "sticky"
       } top-0 z-40 w-full text-white bg-blue-500`}
     >
       <div className="p-3 flex justify-center items-center text-lg bg-black ">

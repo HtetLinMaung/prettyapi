@@ -10,6 +10,7 @@ const fetchApi = async (page, token, search, router) => {
       page,
       per_page: 20,
       search,
+      screen: "explore",
     },
     { Authorization: `Bearer ${token || ""}` }
   );

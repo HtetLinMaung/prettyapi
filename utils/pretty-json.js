@@ -46,6 +46,7 @@ export const getBeautifulJson = (obj = {}) => {
   const keys = getAllKeys(obj);
   const values = getAllValues(obj);
 
+  const nums = [];
   for (const v of values) {
     if (typeof v == "string") {
       json = json
@@ -54,18 +55,24 @@ export const getBeautifulJson = (obj = {}) => {
           `: <span class="json-value-string">"${v}"</span>`
         )
         .replaceAll(`"${v}"`, `<span class="json-value-string">"${v}"</span>`);
-    } else if (typeof v == "number" || typeof v == "boolean") {
-      json = json
-        .replaceAll(
-          `: ${v}`,
-          `: <span class="json-value-${typeof v}">${v}</span>`
-        )
-        .replaceAll(
-          `"${v}"`,
-          `<span class="json-value-${typeof v}">"${v}"</span>`
-        );
+    } else if (typeof v == "number") {
+      nums.push(v);
+    } else if (typeof v == "boolean") {
+      json = json.replaceAll(
+        `: ${v}`,
+        `: <span class="json-value-${typeof v}">${v}</span>`
+      );
     }
   }
+  // sort nums by descending
+  nums.sort((a, b) => b - a);
+  for (const n of nums) {
+    json = json.replace(
+      new RegExp(`: ${n}`, "g"),
+      `: <span class="json-value-number">${n}</span>`
+    );
+  }
+
   for (const key of keys) {
     json = json.replaceAll(
       `"${key}":`,
