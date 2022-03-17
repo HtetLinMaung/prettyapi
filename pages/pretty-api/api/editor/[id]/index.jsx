@@ -209,11 +209,13 @@ export default function ApiForm({ id, access_key }) {
 
   useEffect(() => {
     if (id == "new") {
-      saveApi(id, router).then(() => {
-        setTimeout(() => {
-          beautifyClickHandler();
-        }, 100);
-      });
+      setTimeout(() => {
+        saveApi(id, router).then(() => {
+          setTimeout(() => {
+            beautifyClickHandler();
+          }, 100);
+        });
+      }, 1000);
     } else {
       fetchApi(id, access_key).then(([res, err]) => {
         if (err) {

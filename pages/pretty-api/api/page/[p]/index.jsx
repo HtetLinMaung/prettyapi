@@ -123,10 +123,10 @@ export default function Api({ p }) {
           className="bg-white shadow-lg rounded-xl p-4"
           style={{ minWidth: "25vw" }}
         >
-          <div className="text-center">API Name</div>
+          <div className="text-center">Document Name</div>
           <input
             value={state.api_name}
-            onChange={(e) =>
+            onInput={(e) =>
               dispatch({
                 type: "SET_STATE",
                 payload: { api_name: e.target.value },
