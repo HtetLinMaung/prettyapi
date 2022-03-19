@@ -5,6 +5,8 @@ import { useRouter } from "next/router";
 import { getBeautifulJson } from "../../../../utils/pretty-json";
 import Modal from "../../../../components/Modal";
 import { showToast } from "../../../../utils/toast";
+import Head from "next/head";
+import Script from "next/script";
 
 const Method = ({ method }) => {
   let className =
@@ -255,6 +257,7 @@ export default function Api({ id, access_key }) {
           })}</pre>`;
 
           beautifyClickHandler(i, i2);
+
           i2++;
         }
         i++;
@@ -299,6 +302,19 @@ export default function Api({ id, access_key }) {
             `gp${i}_${i2}_tab_headers`
           );
           headers_tag.innerHTML = `<pre class="font-code">${globalHeaders}</pre>`;
+
+          // const j = headers_tag.innerText.trim();
+          // const options = {};
+          // const editor = new JSONEditor(headers_tag, options);
+          // const initialJson = {
+          //   Array: [1, 2, 3],
+          //   Boolean: true,
+          //   Null: null,
+          //   Number: 123,
+          //   Object: { a: "b", c: "d" },
+          //   String: "Hello World",
+          // };
+          // editor.set(initialJson);
           i2++;
         }
         i++;
@@ -308,6 +324,10 @@ export default function Api({ id, access_key }) {
 
   return (
     <div className="container mx-auto pt-5 mb-10 px-4">
+      <Head>
+        {/* <link rel="stylesheet" href="/pretty-api/jsoneditor.min.css" /> */}
+      </Head>
+      {/* <Script src="/pretty-api/jsoneditor.min.js" /> */}
       {json ? (
         <div>
           <div className="p-3 mb-5">
